@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ConditionalNavbar } from "@/components/home/ConditionalNavbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ConditionalNavbar />
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

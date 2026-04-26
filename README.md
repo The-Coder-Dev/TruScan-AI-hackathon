@@ -1,6 +1,6 @@
 
 <br />
-      <img src="public\readme\project_banner.png" alt=" Project Banner">
+      <img src="https://github.com/The-Coder-Dev/TruScan-AI-hackathon/blob/main/public/readme/project_banner.webp">
 <br />
 
 # TruScan AI
@@ -218,8 +218,4 @@ http://localhost:3000
 - View fraud analysis instantly
 
 ---
-
-## License
-
-This project is built for hackathon and production-ready SaaS development purposes.
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Zap, BarChart3, Phone, AlertTriangle, Wifi, Activity } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 const trustStats = [
   { icon: BarChart3, value: "10M+", label: "Calls analyzed" },
@@ -43,7 +44,12 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left – Copy */}
-          <div className="flex flex-col gap-7">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col gap-7"
+          >
             {/* Badge pill */}
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1.5 text-xs font-semibold bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1.5">
@@ -112,16 +118,26 @@ export function HeroSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Right – Hero Visual */}
-          <div className="relative flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="relative flex items-center justify-center"
+          >
             {/* Glow ring */}
             <div className="absolute w-[440px] h-[440px] rounded-full border border-primary/10 animate-pulse" />
             <div className="absolute w-[380px] h-[380px] rounded-full bg-primary/5 blur-xl" />
 
             {/* Main card */}
-            <div className="relative bg-white rounded-3xl shadow-2xl shadow-black/8 border border-border/60 p-6 w-full max-w-sm z-10">
+            <motion.div
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              transition={{ repeat: Infinity, repeatType: "reverse", duration: 4, ease: "easeInOut" }}
+              className="relative bg-white rounded-3xl shadow-2xl shadow-black/8 border border-border/60 p-6 w-full max-w-sm z-10"
+            >
               {/* Card header */}
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
@@ -168,9 +184,11 @@ export function HeroSection() {
                   <div key={item.label} className="flex items-center gap-3">
                     <span className="text-xs text-muted-foreground w-32 shrink-0">{item.label}</span>
                     <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
-                      <div
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${item.value}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
                         className={`h-full rounded-full ${item.color}`}
-                        style={{ width: `${item.value}%` }}
                       />
                     </div>
                     <span className={`text-xs font-bold w-8 text-right ${item.bad ? "text-red-500" : "text-emerald-600"}`}>
@@ -196,10 +214,15 @@ export function HeroSection() {
                 <Wifi className="h-3 w-3 text-primary" />
                 <span className="text-xs font-semibold text-foreground">Live AI</span>
               </div>
-            </div>
+            </motion.div>
 
             {/* SMS scam mini-card */}
-            <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-xl border border-border/60 px-4 py-3 max-w-[200px] z-20">
+            <motion.div
+              initial={{ opacity: 0, x: -20, y: 10 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-xl border border-border/60 px-4 py-3 max-w-[200px] z-20"
+            >
               <p className="text-xs font-semibold text-foreground mb-1">SMS Scan</p>
               <p className="text-[10px] text-muted-foreground leading-snug line-clamp-2">
                 "URGENT: Your bank account is locked. Click now to verify…"
@@ -208,8 +231,8 @@ export function HeroSection() {
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                 <span className="text-[10px] font-bold text-red-500">SCAM DETECTED</span>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

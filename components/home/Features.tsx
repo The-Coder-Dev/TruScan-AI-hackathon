@@ -1,7 +1,10 @@
+"use client";
+
 import {
   Phone, MessageSquare, Fingerprint, LayoutDashboard,
   Code2, ShieldCheck, Zap, Globe, Lock,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -54,7 +57,13 @@ export function Features() {
     <section id="features" className="py-24 bg-secondary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-4">
             Features
           </span>
@@ -64,7 +73,7 @@ export function Features() {
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to detect, block, and report AI-powered fraud — all in one platform.
           </p>
-        </div>
+        </motion.div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -72,7 +81,11 @@ export function Features() {
             const Icon = feature.icon;
             const isFirst = i === 0;
             return (
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
                 key={feature.title}
                 className={`group relative rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 ${
                   isFirst
@@ -125,7 +138,7 @@ export function Features() {
                     <Zap className="h-4 w-4 text-primary" />
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -133,3 +146,4 @@ export function Features() {
     </section>
   );
 }
+

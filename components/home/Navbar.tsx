@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Shield, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -79,30 +80,40 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-background/98 backdrop-blur-md border-b border-border px-4 pb-4">
-          <nav className="flex flex-col gap-1 pt-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-secondary transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="pt-2 flex flex-col gap-2">
-              <Link href="/signin">
-                <Button variant="outline" className="w-full text-sm">Sign in</Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="w-full text-sm bg-primary text-primary-foreground">Get Started Free</Button>
-              </Link>
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="md:hidden bg-background/98 backdrop-blur-md border-b border-border overflow-hidden"
+          >
+            <div className="px-4 pb-4">
+              <nav className="flex flex-col gap-1 pt-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-secondary transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <div className="pt-2 flex flex-col gap-2">
+                  <Link href="/signin" onClick={() => setMobileOpen(false)}>
+                    <Button variant="outline" className="w-full text-sm">Sign in</Button>
+                  </Link>
+                  <Link href="/signup" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full text-sm bg-primary text-primary-foreground">Get Started Free</Button>
+                  </Link>
+                </div>
+              </nav>
             </div>
-          </nav>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

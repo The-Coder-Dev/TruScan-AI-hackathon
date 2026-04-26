@@ -12,8 +12,40 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TruScan AI — Deepfake & Scam Detection",
-  description: "Protect yourself from deepfake fraud calls & SMS scams with AI-powered detection.",
+  metadataBase: new URL("https://truscan.ai"),
+  title: {
+    default: "TruScan AI — Deepfake & Scam Detection",
+    template: "%s | TruScan AI",
+  },
+  description: "Protect yourself and your business from deepfake fraud calls, voice cloning, and SMS scams with our real-time AI-powered detection platform.",
+  keywords: ["deepfake detection", "fraud prevention", "AI voice analysis", "SMS scam detector", "voice cloning detection", "cybersecurity"],
+  authors: [{ name: "TruScan AI Team" }],
+  creator: "TruScan AI",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://truscan.ai",
+    title: "TruScan AI — Deepfake & Scam Detection",
+    description: "Enterprise-grade AI detection for deepfake calls and SMS scams. Stop fraudsters before they cause damage.",
+    siteName: "TruScan AI",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TruScan AI — Deepfake & Scam Detection",
+    description: "Enterprise-grade AI detection for deepfake calls and SMS scams.",
+    creator: "@TruScanAI",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

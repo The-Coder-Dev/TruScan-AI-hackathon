@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import { FileText } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export const metadata = {
-  title: "Terms of Service | TruScan AI",
+export const metadata: Metadata = {
+  title: "Terms of Service",
   description: "Terms and conditions for using TruScan AI's platform.",
+  openGraph: {
+    title: "Terms of Service | TruScan AI",
+    description: "Terms and conditions for using TruScan AI's platform.",
+    url: "https://truscan-ai.vercel.app/terms",
+  },
 };
 
 export default function TermsOfServicePage() {

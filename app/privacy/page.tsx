@@ -1,16 +1,22 @@
+import type { Metadata } from "next";
 import { Shield } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export const metadata = {
-  title: "Privacy Policy | TruScan AI",
+export const metadata: Metadata = {
+  title: "Privacy Policy",
   description: "Learn how TruScan AI collects, uses, and protects your data.",
+  openGraph: {
+    title: "Privacy Policy | TruScan AI",
+    description: "Learn how TruScan AI collects, uses, and protects your data.",
+    url: "https://truscan.ai/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary/20 pt-24 pb-16">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background -z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/5 via-background to-background -z-10" />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">

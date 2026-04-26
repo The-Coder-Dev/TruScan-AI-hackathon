@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardClient } from "./DashboardClient";
 import type { UserPlan, Scan } from "@/lib/database.types";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Manage your scans and view threat reports on TruScan AI.",
+};
 
 export default async function DashboardPage() {
   const supabase = await createClient();

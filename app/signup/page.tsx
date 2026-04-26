@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signUpWithEmail } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/client";
+import { getURL } from "@/lib/utils";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -56,7 +57,7 @@ export default function SignUpPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${getURL()}auth/callback`,
       },
     });
     if (error) {

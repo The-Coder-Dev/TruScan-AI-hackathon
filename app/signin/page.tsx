@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signInWithEmail } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { getURL } from "@/lib/utils";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function SignInPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${getURL()}auth/callback`,
       },
     });
     if (error) {

@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           confidence: number
           created_at: string
+          deepfake_score: number | null
           explanation: string
           fraud_score: number
           id: string
@@ -25,6 +26,7 @@ export type Database = {
         Insert: {
           confidence?: number
           created_at?: string
+          deepfake_score?: number | null
           explanation?: string
           fraud_score?: number
           id?: string
@@ -37,6 +39,7 @@ export type Database = {
         Update: {
           confidence?: number
           created_at?: string
+          deepfake_score?: number | null
           explanation?: string
           fraud_score?: number
           id?: string

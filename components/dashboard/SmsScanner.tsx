@@ -68,7 +68,7 @@ export function SmsScanner({ plan, onScanComplete, onCreditUsed }: Props) {
   }
 
   return (
-    <div className="space-y-5 max-w-2xl">
+    <div className="space-y-5 w-full">
       <div>
         <h1 className="text-2xl font-bold">SMS Fraud Scanner</h1>
         <p className="text-muted-foreground text-sm mt-1">

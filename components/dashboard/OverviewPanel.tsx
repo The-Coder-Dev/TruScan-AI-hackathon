@@ -42,7 +42,7 @@ export function OverviewPanel({ user, plan, scans, onNavigate }: Props) {
       : Math.round(((stats.total - stats.threats) / stats.total) * 100);
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Welcome */}
       <div className="flex items-start justify-between">
         <div>
@@ -201,7 +201,7 @@ export function OverviewPanel({ user, plan, scans, onNavigate }: Props) {
         </div>
 
         {/* Quick actions + Protection score */}
-        <div className="space-y-4">
+        <div className="space-y-4 ">
           {/* Quick actions */}
           <Card>
             <CardHeader className="pb-2">

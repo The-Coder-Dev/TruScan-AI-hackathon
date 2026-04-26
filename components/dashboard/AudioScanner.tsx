@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useTransition } from "react";
+import { useState, useRef, useCallback } from "react";
 import {
   Upload,
   Mic,
@@ -12,16 +12,16 @@ import {
   ShieldAlert,
   Sparkles,
   AlertTriangle,
+  MessageSquare,
+  Cpu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { analyzeAudio } from "@/app/dashboard/actions";
 import { RiskBadge, ScoreBar, formatDate } from "@/components/dashboard/shared";
-import type { Scan } from "@/lib/database.types";
-import type { UserPlan } from "@/lib/database.types";
+import type { Scan, UserPlan } from "@/lib/database.types";
 
 interface Props {
   plan: UserPlan;
@@ -29,16 +29,28 @@ interface Props {
   onCreditUsed: () => void;
 }
 
+interface AudioResult {
+  scan: Scan;
+  transcript: string;
+  deepfake_score: number;
+  fraud_score: number;
+  indicators: string[];
+  suggested_action: string;
+}
+
 export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ scan: Scan; indicators: string[] } | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [result, setResult] = useState<AudioResult | null>(null);
+  const [stage, setStage] = useState<string>("");
+
   const fileRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const remaining = Math.max(0, plan.credits_total - plan.credits_used);
 
@@ -47,17 +59,21 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
     setDragging(false);
     const dropped = e.dataTransfer.files[0];
     if (dropped) validateAndSet(dropped);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function validateAndSet(f: File) {
     setError(null);
     setResult(null);
-    if (!f.type.startsWith("audio/") && !f.name.match(/\.(mp3|wav|ogg|m4a|flac|webm)$/i)) {
-      setError("Unsupported file. Please upload MP3, WAV, OGG, M4A, or FLAC.");
+    if (
+      !f.type.startsWith("audio/") &&
+      !f.type.startsWith("video/mp4") &&
+      !f.name.match(/\.(mp3|wav|ogg|m4a|mp4|flac|webm|aac)$/i)
+    ) {
+      setError("Unsupported file. Please upload MP3, WAV, M4A, MP4, OGG, or FLAC.");
       return;
     }
-    if (f.size > 25 * 1024 * 1024) {
-      setError("File too large. Maximum 25 MB allowed.");
+    if (f.size > 20 * 1024 * 1024) {
+      setError("File too large. Maximum 20 MB allowed.");
       return;
     }
     setFile(f);
@@ -79,29 +95,83 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
   async function handleAnalyze() {
     if (!file) return;
     setError(null);
-    const fd = new FormData();
-    fd.append("audio", file);
-
-    // Simulate upload progress
+    setIsLoading(true);
     setProgress(0);
-    const interval = setInterval(() => {
-      setProgress((p) => (p >= 85 ? p : p + Math.random() * 15));
-    }, 300);
+    setStage("Uploading audio…");
 
-    startTransition(async () => {
-      const res = await analyzeAudio(fd);
-      clearInterval(interval);
+    // Simulate realistic progress stages while waiting for the real API
+    const stages = [
+      { at: 10, label: "Transcribing with Whisper AI…" },
+      { at: 40, label: "Analyzing fraud intent with Llama…" },
+      { at: 70, label: "Deepfake detection via Reality Defender…" },
+      { at: 90, label: "Merging analysis results…" },
+    ];
+    let stageIdx = 0;
+
+    intervalRef.current = setInterval(() => {
+      setProgress((p) => {
+        const next = p >= 88 ? p : p + Math.random() * 6;
+        if (stageIdx < stages.length && next >= stages[stageIdx].at) {
+          setStage(stages[stageIdx].label);
+          stageIdx++;
+        }
+        return next;
+      });
+    }, 400);
+
+    try {
+      const fd = new FormData();
+      fd.append("audio", file);
+
+      const res = await fetch("/api/analyze-audio", {
+        method: "POST",
+        body: fd,
+      });
+
+      clearInterval(intervalRef.current!);
       setProgress(100);
-      if (res.error === "no_credits") {
-        setError("no_credits");
-      } else if (res.error) {
-        setError(res.error);
-      } else if (res.success && res.scan) {
-        setResult({ scan: res.scan as Scan, indicators: res.indicators ?? [] });
-        onScanComplete(res.scan as Scan);
+
+      const data = await res.json() as {
+        success?: boolean;
+        error?: string;
+        scan?: Scan;
+        transcript?: string;
+        deepfake_score?: number;
+        fraud_score?: number;
+        risk_level?: string;
+        summary?: string;
+        suggested_action?: string;
+        indicators?: string[];
+      };
+
+      if (!res.ok || data.error) {
+        if (data.error === "no_credits") {
+          setError("no_credits");
+        } else {
+          setError(data.error ?? "Analysis failed. Please try again.");
+        }
+        return;
+      }
+
+      if (data.success && data.scan) {
+        setResult({
+          scan: data.scan,
+          transcript: data.transcript ?? "",
+          deepfake_score: data.deepfake_score ?? 50,
+          fraud_score: data.fraud_score ?? 0,
+          indicators: data.indicators ?? [],
+          suggested_action: data.suggested_action ?? "",
+        });
+        onScanComplete(data.scan);
         onCreditUsed();
       }
-    });
+    } catch {
+      clearInterval(intervalRef.current!);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+      setStage("");
+    }
   }
 
   function reset() {
@@ -110,11 +180,12 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
     setError(null);
     setProgress(0);
     setPlaying(false);
+    setStage("");
     if (audioRef.current) audioRef.current.src = "";
   }
 
   return (
-    <div className="space-y-5 max-w-2xl">
+    <div className="space-y-5 w-full">
       <div>
         <h1 className="text-2xl font-bold">Audio Fraud Scanner</h1>
         <p className="text-muted-foreground text-sm mt-1">
@@ -123,11 +194,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
       </div>
 
       {/* Hidden audio element */}
-      <audio
-        ref={audioRef}
-        onEnded={() => setPlaying(false)}
-        className="hidden"
-      />
+      <audio ref={audioRef} onEnded={() => setPlaying(false)} className="hidden" />
 
       {/* Credits warning */}
       {remaining <= 2 && remaining > 0 && (
@@ -176,13 +243,48 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ScoreBar score={result.scan.fraud_score} risk={result.scan.risk_level} />
+
+              {/* Dual scores: Fraud + Deepfake */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-secondary/50 rounded-lg p-3 space-y-1.5">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    Fraud Score
+                  </p>
+                  <ScoreBar score={result.fraud_score} risk={result.scan.risk_level} />
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-3 space-y-1.5">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+                    <Cpu className="w-3 h-3" /> Deepfake Score
+                  </p>
+                  <ScoreBar
+                    score={result.deepfake_score}
+                    risk={result.deepfake_score >= 65 ? "high" : result.deepfake_score >= 30 ? "medium" : "low"}
+                  />
+                </div>
+              </div>
 
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">Confidence:</span>
                 <Badge variant="outline">{result.scan.confidence}%</Badge>
+                <span className="text-muted-foreground ml-2">Powered by:</span>
+                <Badge variant="outline" className="text-xs gap-1">
+                  <Sparkles className="w-2.5 h-2.5" /> Whisper · Llama · Reality Defender
+                </Badge>
               </div>
 
+              {/* Transcript */}
+              {result.transcript && (
+                <div className="bg-secondary/50 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 flex items-center gap-1">
+                    <MessageSquare className="w-3 h-3" /> Transcript
+                  </p>
+                  <p className="text-sm text-foreground leading-relaxed line-clamp-5 italic">
+                    &ldquo;{result.transcript}&rdquo;
+                  </p>
+                </div>
+              )}
+
+              {/* AI Summary */}
               <div className="bg-secondary/50 rounded-lg p-4 space-y-1.5">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">AI Explanation</p>
                 <p className="text-sm leading-relaxed">{result.scan.explanation}</p>
@@ -199,11 +301,26 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                 </div>
               )}
 
+              {/* Suggested action */}
+              {result.suggested_action && (
+                <div className={`rounded-lg p-3 text-sm font-medium ${
+                  result.scan.risk_level === "high"
+                    ? "bg-red-500/10 text-red-600"
+                    : result.scan.risk_level === "medium"
+                    ? "bg-amber-500/10 text-amber-700"
+                    : "bg-emerald-500/10 text-emerald-700"
+                }`}>
+                  <span className="font-semibold">Suggested Action: </span>
+                  {result.suggested_action}
+                </div>
+              )}
+
               <div className="text-xs text-muted-foreground">
                 ✓ Saved to scan history automatically
               </div>
             </CardContent>
           </Card>
+
           <Button variant="outline" onClick={reset} className="gap-2">
             <Upload className="w-4 h-4" /> Scan Another File
           </Button>
@@ -225,7 +342,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
             <input
               ref={fileRef}
               type="file"
-              accept="audio/*"
+              accept="audio/*,.mp4"
               className="hidden"
               onChange={(e) => e.target.files?.[0] && validateAndSet(e.target.files[0])}
             />
@@ -236,15 +353,15 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                   <Mic className="w-7 h-7 text-primary" />
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-foreground">Drag & drop audio file</p>
+                  <p className="font-semibold text-foreground">Drag &amp; drop audio file</p>
                   <p className="text-sm text-muted-foreground mt-1">or click to browse</p>
                 </div>
                 <div className="flex gap-2 mt-1">
-                  {["MP3", "WAV", "OGG", "M4A", "FLAC"].map((ext) => (
+                  {["MP3", "WAV", "M4A", "MP4", "OGG", "FLAC"].map((ext) => (
                     <Badge key={ext} variant="outline" className="text-xs">{ext}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground">Max 25 MB</p>
+                <p className="text-xs text-muted-foreground">Max 20 MB</p>
               </div>
             ) : (
               <div className="p-5 flex items-center gap-4">
@@ -256,10 +373,10 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                   <p className="text-xs text-muted-foreground">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
-                  {isPending && (
+                  {isLoading && (
                     <div className="mt-2 space-y-1">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Analyzing…</span>
+                        <span className="truncate">{stage || "Processing…"}</span>
                         <span>{Math.round(progress)}%</span>
                       </div>
                       <Progress value={progress} className="h-1.5" />
@@ -273,7 +390,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                     size="icon"
                     className="h-8 w-8"
                     onClick={(e) => { e.stopPropagation(); togglePlay(); }}
-                    disabled={isPending}
+                    disabled={isLoading}
                   >
                     {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                   </Button>
@@ -283,7 +400,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                     size="icon"
                     className="h-8 w-8"
                     onClick={(e) => { e.stopPropagation(); reset(); }}
-                    disabled={isPending}
+                    disabled={isLoading}
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -300,12 +417,12 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
 
           <Button
             onClick={handleAnalyze}
-            disabled={!file || isPending || remaining === 0}
+            disabled={!file || isLoading || remaining === 0}
             className="w-full h-11 gap-2 font-semibold"
           >
-            {isPending ? (
+            {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Analyzing Audio…
+                <Loader2 className="w-4 h-4 animate-spin" /> {stage || "Analyzing Audio…"}
               </>
             ) : (
               <>

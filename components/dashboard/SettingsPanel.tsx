@@ -27,7 +27,7 @@ export function SettingsPanel({ user, plan }: Props) {
     .slice(0, 2);
 
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold">Settings</h1>
         <p className="text-muted-foreground text-sm mt-1">Manage your account preferences.</p>

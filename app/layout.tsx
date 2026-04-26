@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.className} h-full antialiased`}
+      className={`${inter.className} h-full antialiased `}
     >
       <body className="min-h-full flex flex-col">
         <ConditionalNavbar />

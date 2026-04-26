@@ -4,6 +4,7 @@ import "./globals.css";
 import { ConditionalNavbar } from "@/components/home/ConditionalNavbar";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,8 +30,9 @@ export default function RootLayout({
         <ConditionalNavbar />
         {children}
         <Toaster richColors position="top-right" />
+        <Analytics />
+        <SpeedInsights />
       </body>
-      <Analytics />
     </html>
   );
 }

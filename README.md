@@ -1,6 +1,6 @@
 
 <br />
-      <img src="public\readme\project_banner.png" alt=" Project Banner">
+      <img src="https://github.com/The-Coder-Dev/TruScan-AI-hackathon/blob/main/public/readme/project_banner.webp">
 <br />
 
 # TruScan AI

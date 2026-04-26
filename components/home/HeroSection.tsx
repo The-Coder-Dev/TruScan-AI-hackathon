@@ -73,24 +73,29 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3">
-              <Link href="/login">
+              
                 <Button
+                asChild
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-7 font-semibold shadow-md hover:shadow-lg transition-all group"
                 >
+                  <Link href="/signin">
                   Start Free Trial
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </Button>
-              </Link>
-              <Link href="#how-it-works">
+              
+              
                 <Button
+                asChild
                   variant="outline"
                   size="lg"
                   className="rounded-full px-7 font-semibold border-border hover:bg-secondary transition-all"
                 >
+                  <Link href="#how-it-works">
                   See How It Works
+                  </Link>
                 </Button>
-              </Link>
+              
             </div>
 
             {/* Trust stats */}

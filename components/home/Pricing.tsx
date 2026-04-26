@@ -10,7 +10,7 @@ const plans = [
     description: "A lightweight way to try. No cost, no card, no hassle.",
     cta: "Start for free",
     ctaVariant: "outline" as const,
-    href: "/login",
+    href: "/signup",
     features: [
       "500 calls analyzed / month",
       "100 SMS scans / month",
@@ -27,7 +27,7 @@ const plans = [
     description: "Full suite detection for growing security teams.",
     cta: "Get started",
     ctaVariant: "default" as const,
-    href: "/login",
+    href: "/signup",
     badge: "Most Popular",
     features: [
       "10,000 calls analyzed / month",
@@ -47,7 +47,7 @@ const plans = [
     description: "Enterprise-grade API and unlimited analysis.",
     cta: "Get started",
     ctaVariant: "outline" as const,
-    href: "/login",
+    href: "/signup",
     features: [
       "Unlimited calls analyzed",
       "Unlimited SMS scans",
@@ -151,24 +151,6 @@ export function Pricing() {
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Enterprise row */}
-        <div className="bg-white border border-border/60 rounded-3xl px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Zap className="h-4 w-4 text-primary" />
-              <p className="font-bold text-foreground">Enterprise Plan</p>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Unlimited everything. Custom SLAs, dedicated infrastructure, and a named account manager.
-            </p>
-          </div>
-          <Link href="/contact" className="shrink-0">
-            <Button variant="outline" className="rounded-full px-6 font-semibold">
-              Contact Sales →
-            </Button>
-          </Link>
         </div>
       </div>
     </section>

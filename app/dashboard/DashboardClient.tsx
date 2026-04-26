@@ -86,7 +86,7 @@ export function DashboardClient({ user, initialPlan, initialScans }: Props) {
         `}
       >
         {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-border flex-shrink-0">
+        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-border shrink-0">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
             <Shield className="w-4 h-4 text-primary-foreground" />
           </div>
@@ -140,7 +140,7 @@ export function DashboardClient({ user, initialPlan, initialScans }: Props) {
                   }
                 `}
               >
-                <Icon className="w-4 h-4 flex-shrink-0" />
+                <Icon className="w-4 h-4 shrink-0" />
                 {item.label}
                 {item.id === "history" && scans.length > 0 && (
                   <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full ${
@@ -155,9 +155,9 @@ export function DashboardClient({ user, initialPlan, initialScans }: Props) {
         </nav>
 
         {/* User + Sign out */}
-        <div className="border-t border-border p-4 space-y-3 flex-shrink-0">
+        <div className="border-t border-border p-4 space-y-3 shrink-0">
           <div className="flex items-center gap-3">
-            <Avatar className="w-8 h-8 flex-shrink-0">
+            <Avatar className="w-8 h-8 shrink-0">
               <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
                 {initials}
               </AvatarFallback>
@@ -191,7 +191,7 @@ export function DashboardClient({ user, initialPlan, initialScans }: Props) {
       {/* ── MAIN ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="h-14 flex items-center gap-3 px-5 border-b border-border bg-card/60 backdrop-blur-sm sticky top-0 z-30 flex-shrink-0">
+        <header className="h-14 flex items-center gap-3 px-5 border-b border-border bg-card/60 backdrop-blur-sm sticky top-0 z-30 shrink-0">
           <button
             className="lg:hidden text-muted-foreground hover:text-foreground p-1"
             onClick={() => setSidebarOpen(true)}
@@ -224,7 +224,7 @@ export function DashboardClient({ user, initialPlan, initialScans }: Props) {
             )}
           </Button>
 
-          <Avatar className="w-7 h-7 cursor-pointer flex-shrink-0" onClick={() => navigate("settings")}>
+          <Avatar className="w-7 h-7 cursor-pointer shrink-0" onClick={() => navigate("settings")}>
             <AvatarFallback className="bg-primary/20 text-primary text-[10px] font-bold">
               {initials}
             </AvatarFallback>

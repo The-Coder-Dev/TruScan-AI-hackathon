@@ -248,7 +248,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
               </div>
             ) : (
               <div className="p-5 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0">
                   <FileAudio className="w-6 h-6 text-violet-500" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -266,7 +266,7 @@ export function AudioScanner({ plan, onScanComplete, onCreditUsed }: Props) {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     type="button"
                     variant="ghost"

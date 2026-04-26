@@ -134,7 +134,7 @@ export function OverviewPanel({ user, plan, scans, onNavigate }: Props) {
               <CardContent className="pt-5">
                 <div className="flex items-start justify-between mb-3">
                   <span className="text-sm text-muted-foreground font-medium">{stat.label}</span>
-                  <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center flex-shrink-0`}>
+                  <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center shrink-0`}>
                     <Icon className={`w-4 h-4 ${stat.color}`} />
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export function OverviewPanel({ user, plan, scans, onNavigate }: Props) {
                         <p className="text-sm font-medium truncate">{scan.label}</p>
                         <p className="text-xs text-muted-foreground">{formatDate(scan.created_at)}</p>
                       </div>
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <RiskBadge level={scan.risk_level} />
                       </div>
                     </div>
@@ -236,7 +236,7 @@ export function OverviewPanel({ user, plan, scans, onNavigate }: Props) {
           </Card>
 
           {/* Protection score widget */}
-          <div className="bg-gradient-to-br from-primary/90 to-violet-600 rounded-xl p-5 text-white">
+          <div className="bg-linear-to-br from-primary/90 to-violet-600 rounded-xl p-5 text-white">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-white/70 text-xs font-medium">Protection Score</p>

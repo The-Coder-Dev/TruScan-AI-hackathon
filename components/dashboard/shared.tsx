@@ -37,11 +37,11 @@ export function RiskBadge({ level }: { level: string }) {
 
 export function ScanTypeIcon({ type }: { type: string }) {
   return type === "audio" ? (
-    <div className="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center flex-shrink-0">
+    <div className="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
       <Mic className="w-4 h-4 text-violet-500" />
     </div>
   ) : (
-    <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+    <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
       <MessageSquare className="w-4 h-4 text-blue-500" />
     </div>
   );

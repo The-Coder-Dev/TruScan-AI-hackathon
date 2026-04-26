@@ -165,7 +165,7 @@ export function SubscriptionPlans({ plan, onUpgrade }: Props) {
                 <ul className="space-y-2">
                   {p.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm">
-                      <Check className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                       <span>{f}</span>
                     </li>
                   ))}

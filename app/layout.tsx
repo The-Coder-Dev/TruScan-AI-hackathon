@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ConditionalNavbar } from "@/components/home/ConditionalNavbar";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
         {children}
         <Toaster richColors position="top-right" />
       </body>
+      <Analytics />
     </html>
   );
 }

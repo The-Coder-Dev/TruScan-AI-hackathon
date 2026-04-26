@@ -219,7 +219,3 @@ http://localhost:3000
 
 ---
 
-## License
-
-This project is built for hackathon and production-ready SaaS development purposes.
-

@@ -12,7 +12,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "TruScan AI — Deepfake & Scam Detection",
-  description: "Protect yourself from deepfake fraud calls & SMS scams with AI-powered real-time detection.",
+  description: "Protect yourself from deepfake fraud calls & SMS scams with AI-powered detection.",
 };
 
 export default function RootLayout({
